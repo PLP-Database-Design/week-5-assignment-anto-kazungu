@@ -25,6 +25,38 @@ db.connect((err) => {
     //if no error
     console.log("Connection successful: ", db.threadId);
 
+    //---------------------------------------------------------
+    app.use(express.static('public'));
+    app.set('view engine', 'ejs');
+    app.set('views', __dirname + '/views');
+
+    //Patients Data
+    app.get('/patients', (req, res) => {
+        db.query('SELECT * FROM patients', (err, results) => {
+            if(err){
+                console.log(err);
+                res.statusMessage(500).send('Error retriving data');
+            } else {
+                //send the data to browser --- patients is name of view
+                res.render('patients', {results: results});
+            }
+        })
+    })
+
+    //Provider Data
+    app.get('/providers', (req, res) => {
+        db.query('SELECT * FROM providers', (err, results) => {
+            if(err){
+                console.log(err);
+                res.statusMessage(500).send('Error retriving data');
+            } else {
+                //send the data to browser --- patients is name of view
+                res.render('providers', {results: results});
+            }
+        })
+    })
+
+
     app.listen(process.env.PORT, () => {
         console.log(`Server listening on port ${process.env.PORT}`);
 
